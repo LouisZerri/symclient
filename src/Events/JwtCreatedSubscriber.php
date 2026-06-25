@@ -2,16 +2,19 @@
 
 namespace App\Events;
 
+use App\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
 
 class JwtCreatedSubscriber
 {
-    public function updateJwtData(JWTCreatedEvent $event)
+    public function updateJwtData(JWTCreatedEvent $event): void
     {
-        // 1. Récupérer l'utilisateur (pour avoir son firstName et lastName)
         $user = $event->getUser();
 
-        // 2. Enrichir les data pour qu'elles contiennent ces données
+        if (!$user instanceof User) {
+            return;
+        }
+
         $data = $event->getData();
         $data['firstName'] = $user->getFirstName();
         $data['lastName'] = $user->getLastName();

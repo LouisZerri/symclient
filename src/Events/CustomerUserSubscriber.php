@@ -2,39 +2,33 @@
 
 namespace App\Events;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\KernelEvents;
-use ApiPlatform\Core\EventListener\EventPriorities;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\Customer;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
 
 class CustomerUserSubscriber implements EventSubscriberInterface
 {
-
-    private $security;
-
-    public function __construct(Security $security)
+    public function __construct(private readonly Security $security)
     {
-        $this->security = $security;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::VIEW => ['setUserForCustomer', EventPriorities::PRE_VALIDATE]
+            KernelEvents::VIEW => ['setUserForCustomer', EventPriorities::PRE_VALIDATE],
         ];
     }
 
-    public function setUserForCustomer(GetResponseForControllerResultEvent $event)
+    public function setUserForCustomer(ViewEvent $event): void
     {
         $customer = $event->getControllerResult();
         $method = $event->getRequest()->getMethod();
 
-        if ($customer instanceof Customer && $method === "POST") {
-            // Choper l'utilisateur actuellement connecté
+        if ($customer instanceof Customer && $method === 'POST') {
             $user = $this->security->getUser();
-            // Assigner l'utilisateur au Customer qu'on est en train de créer
             if ($user) {
                 $customer->setUser($user);
             }

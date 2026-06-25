@@ -1,10 +1,12 @@
 import React, { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthAPI from "../services/authAPI";
 import AuthContext from "../contexts/AuthContext";
 import Field from "../components/forms/Field";
 import { toast } from "react-toastify";
 
-const LoginPage = ({ history }) => {
+const LoginPage = () => {
+  const navigate = useNavigate();
   const { setIsAuthenticated } = useContext(AuthContext);
 
   const [credentials, setCredentials] = useState({
@@ -28,7 +30,7 @@ const LoginPage = ({ history }) => {
       setError("");
       setIsAuthenticated(true);
       toast.success("Vous êtes désormais connecté !");
-      history.replace("/customers");
+      navigate("/customers", { replace: true });
     } catch (error) {
       setError(
         "Aucun compte ne possède cette adresse email ou alors les informations ne correspondent pas !"
@@ -40,6 +42,10 @@ const LoginPage = ({ history }) => {
   return (
     <>
       <h1>Connexion à l'application</h1>
+
+      <div className="alert alert-info">
+        Compte de démo : <code>demo@symreact.local</code> / <code>password</code>
+      </div>
 
       <form onSubmit={handleSubmit}>
         <Field

@@ -2,38 +2,33 @@
 
 namespace App\Events;
 
-use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\KernelEvents;
-use ApiPlatform\Core\EventListener\EventPriorities;
-use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
+use ApiPlatform\Symfony\EventListener\EventPriorities;
 use App\Entity\User;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpKernel\Event\ViewEvent;
+use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class PasswordEncoderSubscriber implements EventSubscriberInterface
 {
-
-    /** @var UserPasswordEncoderInterface */
-    private $encoder;
-
-    public function __construct(UserPasswordEncoderInterface $encoder)
+    public function __construct(private readonly UserPasswordHasherInterface $hasher)
     {
-        $this->encoder = $encoder;
     }
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::VIEW => ['encodePassword', EventPriorities::PRE_WRITE]
+            KernelEvents::VIEW => ['encodePassword', EventPriorities::PRE_WRITE],
         ];
     }
 
-    public function encodePassword(GetResponseForControllerResultEvent $event)
+    public function encodePassword(ViewEvent $event): void
     {
         $user = $event->getControllerResult();
-        $method = $event->getRequest()->getMethod(); // POST, GET, PUT, ...
+        $method = $event->getRequest()->getMethod();
 
-        if ($user instanceof User && $method === "POST") {
-            $hash = $this->encoder->encodePassword($user, $user->getPassword());
+        if ($user instanceof User && $method === 'POST') {
+            $hash = $this->hasher->hashPassword($user, $user->getPassword());
             $user->setPassword($hash);
         }
     }

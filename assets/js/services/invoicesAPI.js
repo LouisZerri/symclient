@@ -4,7 +4,7 @@ import { INVOICES_API } from "../config";
 function findAll() {
   return axios
     .get(INVOICES_API)
-    .then(response => response.data["hydra:member"]);
+    .then(response => (response.data["member"] ?? response.data["hydra:member"]));
 }
 
 function deleteInvoice(id) {

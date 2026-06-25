@@ -8,7 +8,7 @@ async function findAll() {
   if (cachedCustomers) return cachedCustomers;
 
   return axios.get(CUSTOMERS_API).then(response => {
-    const customers = response.data["hydra:member"];
+    const customers = (response.data["member"] ?? response.data["hydra:member"]);
     Cache.set("customers", customers);
     return customers;
   });

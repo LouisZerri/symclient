@@ -15,8 +15,8 @@ const CustomersPageWithPagination = props => {
         `http://localhost:8000/api/customers?pagination=true&count=${itemsPerPage}&page=${currentPage}`
       )
       .then(response => {
-        setCustomers(response.data["hydra:member"]);
-        setTotalItems(response.data["hydra:totalItems"]);
+        setCustomers((response.data["member"] ?? response.data["hydra:member"]));
+        setTotalItems((response.data["totalItems"] ?? response.data["hydra:totalItems"]));
         setLoading(false);
       })
       .catch(error => console.log(error.response));

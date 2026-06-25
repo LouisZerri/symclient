@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import Field from "../components/forms/Field";
 import Select from "../components/forms/Select";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import CustomersAPI from "../services/customersAPI";
 import InvoicesAPI from "../services/invoicesAPI";
 import { toast } from "react-toastify";
 import FormContentLoader from "../components/loaders/FormContentLoader";
 
-const InvoicePage = ({ history, match }) => {
-  const { id = "new" } = match.params;
+const InvoicePage = () => {
+  const navigate = useNavigate();
+  const { id = "new" } = useParams();
 
   const [invoice, setInvoice] = useState({
     amount: "",
@@ -34,7 +35,7 @@ const InvoicePage = ({ history, match }) => {
       if (!invoice.customer) setInvoice({ ...invoice, customer: data[0].id });
     } catch (error) {
       toast.error("Impossible de charger les clients");
-      history.replace("/invoices");
+      navigate("/invoices", { replace: true });
     }
   };
 
@@ -46,7 +47,7 @@ const InvoicePage = ({ history, match }) => {
       setLoading(false);
     } catch (error) {
       toast.error("Impossible de charger la facture demandée");
-      history.replace("/invoices");
+      navigate("/invoices", { replace: true });
     }
   };
 
@@ -80,7 +81,7 @@ const InvoicePage = ({ history, match }) => {
       } else {
         await InvoicesAPI.create(invoice);
         toast.success("La facture a bien été enregistrée");
-        history.replace("/invoices");
+        navigate("/invoices", { replace: true });
       }
     } catch ({ response }) {
       const { violations } = response.data;

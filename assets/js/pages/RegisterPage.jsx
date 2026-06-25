@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import Field from "./../components/forms/Field";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import UsersAPI from "../services/usersAPI";
 import { toast } from "react-toastify";
 
-const RegisterPage = ({ history }) => {
+const RegisterPage = () => {
+  const navigate = useNavigate();
   const [user, setUser] = useState({
     firstName: "",
     lastName: "",
@@ -49,7 +50,7 @@ const RegisterPage = ({ history }) => {
       toast.success(
         "Vous êtes désormais inscrit, vous pouvez vous connecter !"
       );
-      history.replace("/login");
+      navigate("/login", { replace: true });
     } catch (error) {
       const { violations } = error.response.data;
 

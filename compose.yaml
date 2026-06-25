@@ -1,0 +1,45 @@
+services:
+  app:
+    build:
+      context: .
+      target: app
+    restart: unless-stopped
+    depends_on:
+      database:
+        condition: service_healthy
+    env_file:
+      - .env.prod
+    volumes:
+      # Clés JWT persistantes (générées au 1er démarrage)
+      - jwt_keys:/var/www/html/config/jwt
+    ports:
+      # Exposé uniquement sur la loopback de l'hôte : le reverse proxy de l'hôte
+      # (qui gère déjà les autres projets + HTTPS) route le domaine vers ce port.
+      - "127.0.0.1:8082:80"
+    networks:
+      - symreact
+
+  database:
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-symreact}
+      MYSQL_USER: ${MYSQL_USER:-louis}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-changeme}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-changeme-root}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD:-changeme-root}"]
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    volumes:
+      - database_data:/var/lib/mysql
+    networks:
+      - symreact
+
+volumes:
+  database_data:
+  jwt_keys:
+
+networks:
+  symreact:

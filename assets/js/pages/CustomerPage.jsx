@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Field from "./../components/forms/Field";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import CustomersAPI from "../services/customersAPI";
 import { toast } from "react-toastify";
 import FormContentLoader from "../components/loaders/FormContentLoader";
 
-const CustomerPage = ({ match, history }) => {
-  const { id = "new" } = match.params;
+const CustomerPage = () => {
+  const navigate = useNavigate();
+  const { id = "new" } = useParams();
 
   const [customer, setCustomer] = useState({
     lastName: "",
@@ -33,7 +34,7 @@ const CustomerPage = ({ match, history }) => {
       setLoading(false);
     } catch (error) {
       toast.error("Le client n'a pas pu être chargé");
-      history.replace("/customers");
+      navigate("/customers", { replace: true });
     }
   };
 
@@ -65,7 +66,7 @@ const CustomerPage = ({ match, history }) => {
       } else {
         await CustomersAPI.create(customer);
         toast.success("Le client a bien été créé");
-        history.replace("/customers");
+        navigate("/customers", { replace: true });
       }
     } catch ({ response }) {
       const { violations } = response.data;
