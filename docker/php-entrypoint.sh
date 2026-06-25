@@ -21,6 +21,9 @@ php bin/console cache:clear --no-interaction
 php bin/console cache:warmup --no-interaction
 php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 
+# Compte de démonstration (idempotent)
+php bin/console app:seed-demo --no-interaction || true
+
 chown -R www-data:www-data var config/jwt
 
 exec "$@"

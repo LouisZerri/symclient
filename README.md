@@ -89,15 +89,21 @@ de l'API sur http://localhost:8000/api/docs.
 
 ## 🐳 Déploiement (Docker)
 
-Voir le `Dockerfile` et `compose.yaml` à la racine. Le déploiement de production tourne
-en conteneurs (php-fpm + nginx + MySQL) derrière le reverse proxy de l'hôte avec HTTPS.
+Voir le `Dockerfile` (Apache + mod_php, multi-stage) et `compose.yaml` (app + MySQL) à la racine.
+Le conteneur web n'est exposé que sur `127.0.0.1:8082` : le reverse proxy de l'hôte route
+`symreact.lzerri-project.fr` (HTTPS Let's Encrypt) vers ce port, sans toucher aux autres projets.
 
 ```bash
-docker compose build
-docker compose up -d
-docker compose exec php php bin/console doctrine:migrations:migrate -n
-docker compose exec php php bin/console doctrine:fixtures:load -n
+# 1. Configurer les secrets de production
+cp .env.prod.dist .env.prod && nano .env.prod   # APP_SECRET, mots de passe DB, JWT_PASSPHRASE…
+
+# 2. Construire et démarrer (--env-file pour que MySQL et l'app partagent les mêmes identifiants)
+docker compose --env-file .env.prod up -d --build
 ```
+
+Au premier démarrage, l'entrypoint attend la base, génère les clés JWT (volume persistant),
+applique les migrations et crée le compte de démo (`app:seed-demo`, idempotent).
+Les fixtures Faker (`doctrine:fixtures:load`) restent réservées au développement.
 
 ## 📚 Endpoints principaux
 
