@@ -1,7 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import AuthContext from "../contexts/AuthContext";
 
 const HomePage = () => {
+  const { isAuthenticated } = useContext(AuthContext);
+
   return (
     <div className="jumbotron">
       <h1 className="display-4">SymReact 🧾</h1>
@@ -12,33 +15,51 @@ const HomePage = () => {
       </p>
       <hr className="my-4" />
 
-      <div className="alert alert-info">
-        <h4 className="alert-heading">Compte de démonstration</h4>
-        <p className="mb-1">
-          Pour tester l'application sans inscription, connectez-vous avec :
-        </p>
-        <ul className="mb-0">
-          <li>
-            Email : <code>demo@symreact.local</code>
-          </li>
-          <li>
-            Mot de passe : <code>password</code>
-          </li>
-        </ul>
-      </div>
+      {isAuthenticated ? (
+        <>
+          <p className="lead">Vous êtes connecté. Que souhaitez-vous gérer ?</p>
+          <p className="lead">
+            <Link className="btn btn-primary btn-lg mr-2" to="/customers" role="button">
+              Mes clients
+            </Link>
+            <Link className="btn btn-outline-secondary btn-lg" to="/invoices" role="button">
+              Mes factures
+            </Link>
+          </p>
+        </>
+      ) : (
+        <>
+          <div className="demo-card my-4">
+            <span className="demo-card__badge">Compte de démonstration</span>
+            <p className="demo-card__hint">
+              Testez l'application sans inscription avec ces identifiants :
+            </p>
+            <div className="demo-card__creds">
+              <div className="demo-card__field">
+                <span className="demo-card__label">Email</span>
+                <span className="demo-card__value">demo@symreact.local</span>
+              </div>
+              <div className="demo-card__field">
+                <span className="demo-card__label">Mot de passe</span>
+                <span className="demo-card__value">password</span>
+              </div>
+            </div>
+          </div>
 
-      <p className="lead">
-        <Link className="btn btn-primary btn-lg mr-2" to="/login" role="button">
-          Connexion
-        </Link>
-        <Link
-          className="btn btn-outline-secondary btn-lg"
-          to="/register"
-          role="button"
-        >
-          Inscription
-        </Link>
-      </p>
+          <p className="lead">
+            <Link className="btn btn-primary btn-lg mr-2" to="/login" role="button">
+              Connexion
+            </Link>
+            <Link
+              className="btn btn-outline-secondary btn-lg"
+              to="/register"
+              role="button"
+            >
+              Inscription
+            </Link>
+          </p>
+        </>
+      )}
     </div>
   );
 };

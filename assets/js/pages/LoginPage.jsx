@@ -43,8 +43,16 @@ const LoginPage = () => {
     <>
       <h1>Connexion à l'application</h1>
 
-      <div className="alert alert-info">
-        Compte de démo : <code>demo@symreact.local</code> / <code>password</code>
+      <div className="demo-card demo-card--inline my-3">
+        <span className="demo-card__badge">Démo</span>
+        <div className="demo-card__field">
+          <span className="demo-card__label">Email</span>
+          <span className="demo-card__value">demo@symreact.local</span>
+        </div>
+        <div className="demo-card__field">
+          <span className="demo-card__label">Mot de passe</span>
+          <span className="demo-card__value">password</span>
+        </div>
       </div>
 
       <form onSubmit={handleSubmit}>

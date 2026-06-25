@@ -9,6 +9,13 @@ api_platform:
     use_symfony_listeners: true
     mapping:
         paths: ['%kernel.project_dir%/src/Entity']
+    # On masque toute la surface "navigable" de l'API : pas de doc Swagger/ReDoc,
+    # pas d'entrypoint hydra. Le front React appelle des URLs fixes, et les données
+    # restent protégées par JWT. Empêche les visiteurs de parcourir l'API.
+    enable_swagger_ui: false
+    enable_re_doc: false
+    enable_entrypoint: false
+    enable_docs: false
     formats:
         jsonld: ['application/ld+json']
         json: ['application/json']
@@ -18,6 +25,9 @@ api_platform:
         html: ['text/html']
     defaults:
         stateless: true
+        # PUT = mise à jour partielle (fusion) plutôt que remplacement complet :
+        # le front n'envoie que les champs modifiés (sentAt/chrono restent inchangés).
+        standard_put: false
         cache_headers:
             vary: ['Content-Type', 'Authorization', 'Origin']
         pagination_enabled: false

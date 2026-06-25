@@ -1,0 +1,72 @@
+/* ------------------------------------------------------------------ *\
+   Encart "compte de démonstration"
+\* ------------------------------------------------------------------ */
+.demo-card {
+  background: #ffffff;
+  border: 1px solid #e6e9ee;
+  border-left: 4px solid #2780e3;
+  border-radius: 0.6rem;
+  padding: 1.1rem 1.35rem;
+  box-shadow: 0 2px 10px rgba(33, 37, 41, 0.06);
+}
+
+.demo-card__badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #2780e3;
+  background: rgba(39, 128, 227, 0.1);
+  padding: 0.22rem 0.7rem;
+  border-radius: 1rem;
+  margin-bottom: 0.7rem;
+}
+
+.demo-card__hint {
+  margin: 0 0 0.85rem;
+  color: #6c757d;
+  font-size: 0.92rem;
+}
+
+.demo-card__creds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem 2rem;
+}
+
+.demo-card__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.demo-card__label {
+  font-size: 0.66rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #adb5bd;
+}
+
+.demo-card__value {
+  font-family: "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 0.95rem;
+  color: #212529;
+  background: #f1f3f5;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.4rem;
+}
+
+/* Variante compacte (page de connexion) */
+.demo-card--inline {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  padding: 0.7rem 1rem;
+}
+
+.demo-card--inline .demo-card__badge {
+  margin-bottom: 0;
+}

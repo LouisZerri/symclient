@@ -4,6 +4,7 @@ import { createRoot } from "react-dom/client";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import PrivateRoute from "./components/PrivateRoute";
+import AnonymousRoute from "./components/AnonymousRoute";
 import AuthContext from "./contexts/AuthContext";
 import CustomersPage from "./pages/CustomersPage";
 import HomePage from "./pages/HomePage";
@@ -38,8 +39,10 @@ const App = () => {
 
         <main className="container pt-5">
           <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route element={<AnonymousRoute />}>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+            </Route>
             <Route element={<PrivateRoute />}>
               <Route path="/invoices/:id" element={<InvoicePage />} />
               <Route path="/invoices" element={<InvoicesPage />} />
@@ -50,7 +53,7 @@ const App = () => {
           </Routes>
         </main>
       </HashRouter>
-      <ToastContainer position="bottom-left" />
+      <ToastContainer position="top-right" theme="colored" />
     </AuthContext.Provider>
   );
 };

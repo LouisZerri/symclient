@@ -18,6 +18,8 @@ function find(id) {
 function update(id, invoice) {
   return axios.put(INVOICES_API + "/" + id, {
     ...invoice,
+    // API Platform 4 attend des types stricts : amount doit être un nombre, pas une chaîne
+    amount: parseFloat(invoice.amount),
     customer: `/api/customers/${invoice.customer}`
   });
 }
@@ -25,6 +27,7 @@ function update(id, invoice) {
 function create(invoice) {
   return axios.post(INVOICES_API, {
     ...invoice,
+    amount: parseFloat(invoice.amount),
     customer: `/api/customers/${invoice.customer}`
   });
 }
