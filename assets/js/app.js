@@ -1,7 +1,7 @@
 // Les imports importants
 import React, { useState } from "react";
 import { createRoot } from "react-dom/client";
-import { HashRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import PrivateRoute from "./components/PrivateRoute";
 import AnonymousRoute from "./components/AnonymousRoute";
@@ -34,7 +34,7 @@ const App = () => {
         setIsAuthenticated
       }}
     >
-      <HashRouter>
+      <BrowserRouter>
         <Navbar />
 
         <main className="container pt-5">
@@ -52,7 +52,7 @@ const App = () => {
             <Route path="/" element={<HomePage />} />
           </Routes>
         </main>
-      </HashRouter>
+      </BrowserRouter>
       <ToastContainer position="top-right" theme="colored" />
     </AuthContext.Provider>
   );
